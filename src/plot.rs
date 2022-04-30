@@ -15,6 +15,6 @@ pub fn plot_terminal(commit_times: Vec<String>) {
         .collect();
 
     let hist = Histogram::from_slice(&hours, HistogramBins::Count(24));
-    let v = ContinuousView::new().add(hist);
+    let v = ContinuousView::new().add(hist).x_range(0., 23.);
     println!("{}", Page::single(&v).dimensions(60, 15).to_text().unwrap());
 }
