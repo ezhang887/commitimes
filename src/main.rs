@@ -14,12 +14,12 @@ struct Args {
     repo_path: String,
 
     #[clap(short, long)]
-    username: Option<String>,
+    author: Option<String>,
 }
 
 fn main() {
     let args = Args::parse();
 
-    let times = parse::get_commit_times(args.repo_path);
+    let times = parse::get_commit_times(args.repo_path, args.author);
     plot::plot_terminal(times);
 }
