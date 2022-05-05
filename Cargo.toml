@@ -7,3 +7,4 @@ edition = "2021"
 
 [dependencies]
 plotlib = "0.5.1"
+clap = { version = "3.1.15", features = ["derive"] }

@@ -1,7 +1,9 @@
 use std::process::Command;
 
-pub fn get_commit_times() -> Vec<String> {
+pub fn get_commit_times(repo_path: String) -> Vec<String> {
     let output = Command::new("git")
+        .arg("-C")
+        .arg(repo_path)
         .arg("log")
         .arg("--pretty=format:%ci")
         .output()
