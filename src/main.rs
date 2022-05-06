@@ -20,6 +20,9 @@ struct Args {
 fn main() {
     let args = Args::parse();
 
-    let times = parse::get_commit_times(args.repo_path, args.author);
-    plot::plot_terminal(times);
+    let result = parse::get_commit_times(args.repo_path, args.author);
+    match result {
+        Ok(times) => plot::plot_terminal(times),
+        Err(e) => eprint!("Error: {}", e),
+    }
 }
