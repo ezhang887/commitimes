@@ -1,0 +1,55 @@
+# https://stackoverflow.com/questions/66354858/can-i-maintain-a-single-binary-on-github-outside-gits-tracking
+
+name: Update binary
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Update binary
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the repo at the commit which triggered this job
+      - name: Set up git repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # used to get the tag of the latest release
+
+      # Build the binary (statically link to deal with glibc version issues)
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - run: |
+          rustup target add x86_64-unknown-linux-musl
+          cargo build --release --target=x86_64-unknown-linux-musl
+
+      # Removes the latest release, so that we can create a new one in its place
+      - name: Delete latest release
+        uses: ame-yu/action-delete-latest-release@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Removes the tag associated with the latest release
+      - name: Delete release tag
+        run: |
+          git tag -d release
+          git push origin :release
+        continue-on-error: true # in case there's no existing release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Creates the new release with the binary as a release asset.
+      # If the previous Action was skipped, then this keeps the same tag as the
+      # previous release.
+      - name: Create new release
+        uses: softprops/action-gh-release@v1
+        with:
+          body: ""
+          name: Latest
+          tag_name: release
+          files: ./target/x86_64-unknown-linux-musl/release/commitimes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
