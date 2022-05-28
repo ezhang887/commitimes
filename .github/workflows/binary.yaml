@@ -1,6 +1,6 @@
 # https://stackoverflow.com/questions/66354858/can-i-maintain-a-single-binary-on-github-outside-gits-tracking
 
-name: Update binary
+name: Deploy binary
 on:
   push:
     branches:

@@ -1,5 +1,8 @@
 # commitimes
 
+![status](https://github.com/ezhang887/commitimes/actions/workflows/build.yaml/badge.svg)
+![status](https://github.com/ezhang887/commitimes/actions/workflows/binary.yaml/badge.svg)
+
 Plot a histogram of a git repo's commit times in the terminal:
 ```
 ~/Github/commitimes master
